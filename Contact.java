@@ -105,6 +105,9 @@ class Contact {
         System.out.println("LastName:");
         String LastName= sc.nextLine();
 
+        Contact uniqueOrnot=AddressBook.search_contact(FirstName,LastName);
+
+        if(uniqueOrnot==null) {
 
 
             System.out.println("Address:");
@@ -123,6 +126,11 @@ class Contact {
 
             Contact contact = new Contact(FirstName, LastName, Address, City, State, ZIP, PhoneNumber, Email);
             AddressBook.Contact_Information(contact);
+        }
+        else{
+            System.out.println("Name already exist .\n Enter a unique name");
+            add_contact();
+        }
 
     }
     /*
