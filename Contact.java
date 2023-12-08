@@ -1,4 +1,4 @@
-
+package rough;
 
 import java.util.*;
 
@@ -119,9 +119,9 @@ class Contact {
         System.out.println("LastName:");
         String LastName= sc.nextLine();
 
-        Contact uniqueOrnot=AddressBook.search_contact(contacts,FirstName,LastName);
+        boolean unique = contacts.stream().noneMatch(p -> (p.getfirstName().equals(FirstName)) && p.getlastName().equals(LastName));
 
-        if(uniqueOrnot==null) {
+        if(unique) {
 
 
             System.out.println("Address:");
@@ -166,29 +166,38 @@ class Contact {
             System.out.println("Existing Contact Details:");
             System.out.println(contact_existing);
             System.out.println("Enter the new details:");
+            while(true) {
+                System.out.println("FirstName:");
+                String FirstName = sc.nextLine();
+                contact_existing.setFirstName(FirstName);
 
-            System.out.println("FirstName:");
-            contact_existing.setFirstName(sc.nextLine());
 
+                System.out.println("LastName:");
+                String LastName = sc.nextLine();
+                contact_existing.setLastName(LastName);
 
-            System.out.println("LastName:");
-            contact_existing.setLastName(sc.nextLine());
+                boolean unique = contacts.stream().anyMatch(p -> (p.getfirstName().equals(FirstName)) && p.getlastName().equals(LastName));
+                if (!unique) {
+                    System.out.println("Address:");
+                    contact_existing.setAddress(sc.nextLine());
+                    System.out.println("City:");
+                    contact_existing.setCity(sc.nextLine());
+                    System.out.println("State:");
+                    contact_existing.setState(sc.nextLine());
+                    System.out.println("ZIP:");
+                    contact_existing.setZip(sc.nextLine());
+                    System.out.println("Phone_number:");
+                    contact_existing.setPhone_number(sc.nextLine());
+                    System.out.println("Email:");
+                    contact_existing.setEmail(sc.nextLine());
 
-            System.out.println("Address:");
-            contact_existing.setAddress(sc.nextLine());
-            System.out.println("City:");
-            contact_existing.setCity(sc.nextLine());
-            System.out.println("State:");
-            contact_existing.setState(sc.nextLine());
-            System.out.println("ZIP:");
-            contact_existing.setZip(sc.nextLine());
-            System.out.println("Phone_number:");
-            contact_existing.setPhone_number(sc.nextLine());
-            System.out.println("Email:");
-            contact_existing.setEmail(sc.nextLine());
-
-            System.out.println("Updated Contact Details");
-            System.out.println(contact_existing);
+                    System.out.println("Updated Contact Details");
+                    System.out.println(contact_existing);
+                    break;
+                } else {
+                    System.out.println("name already exist...");
+                }
+            }
         }
         else{
             System.out.println("No Contact found ....");
@@ -221,49 +230,49 @@ class Contact {
         while (choice>0 && choice <4){
             System.out.println("Enter name of address book you need to update");
             String address_book_name=sc.nextLine();
-           Set<Contact> address_book=AddressBook.Serach_Address(address_book_name);
-           if(address_book==null){
+            Set<Contact> address_book=AddressBook.Serach_Address(address_book_name);
+            if(address_book==null){
 
-               address_book=new HashSet<>() ;
-               AddressBook.Multiple_address_Book.put(address_book_name,address_book);
+                address_book=new HashSet<>() ;
+                AddressBook.Multiple_address_Book.put(address_book_name,address_book);
 
-           }
-
-
+            }
 
 
 
-        System.out.println("1.Add Contact \n" +
-                "2.Edit Contact \n" +
-                "3.Delete Contact \n" +
-                "4.exit ");
-
-        choice= sc.nextInt();
-        sc.nextLine();
 
 
+            System.out.println("1.Add Contact \n" +
+                    "2.Edit Contact \n" +
+                    "3.Delete Contact \n" +
+                    "4.exit ");
 
-           switch (choice){
-               case 1:
-                   add_contact(address_book);
-
-                   break;
-               case 2:
-                   edit_contact(address_book);
-
-                   break;
-               case 3:
-                   delete_contact(address_book);
-                   break;
-               default:
+            choice= sc.nextInt();
+            sc.nextLine();
 
 
-                   break;
 
-           }
+            switch (choice){
+                case 1:
+                    add_contact(address_book);
+
+                    break;
+                case 2:
+                    edit_contact(address_book);
+
+                    break;
+                case 3:
+                    delete_contact(address_book);
+                    break;
+                default:
 
 
-       }
+                    break;
+
+            }
+
+
+        }
 
 
 
@@ -278,7 +287,7 @@ class AddressBook{
 
 
     public static  Set<Contact> contact_Information=new HashSet<>();
-     public static Hashtable<String,Set<Contact>> Multiple_address_Book=new Hashtable<>();
+    public static Hashtable<String,Set<Contact>> Multiple_address_Book=new Hashtable<>();
 
     public static Set Serach_Address(String s){
         for(Map.Entry<String,Set<Contact>> map:Multiple_address_Book.entrySet()){
@@ -320,4 +329,3 @@ class AddressBook{
 
 
 }
-
