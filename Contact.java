@@ -1,6 +1,5 @@
-package rough;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 class Contact {
     /*
@@ -36,6 +35,14 @@ class Contact {
 
     public String getlastName() {
         return lastName;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
     }
 
     public void setFirstName(String firstName) {
@@ -226,6 +233,7 @@ class Contact {
         AddressBook addressBook=new AddressBook();
 
         System.out.println("Welcome to Address Book Program in AddressBookMain");
+
         int choice = 1;
         while (choice>0 && choice <4){
             System.out.println("Enter name of address book you need to update");
@@ -273,6 +281,16 @@ class Contact {
 
 
         }
+        System.out.println("Search contact by city or state");
+
+        List<List<Contact>> search_result = AddressBook.searchPersonInCityOrState(sc.nextLine());
+
+        for(List list : search_result){
+            for(Object c: list){
+                System.out.println(c.toString());
+            }
+        }
+
 
 
 
@@ -298,6 +316,16 @@ class AddressBook{
 
         }
         return null;
+
+    }
+
+    public static List<List<Contact>> searchPersonInCityOrState(String search_city_or_state) {
+        List<List<Contact>> search_result = new LinkedList<>();
+        for(Map.Entry<String,Set<Contact>> map : Multiple_address_Book.entrySet()){
+            search_result.add(map.getValue().stream()
+                    .filter(person -> person.getCity().equalsIgnoreCase(search_city_or_state) || person.getState().equalsIgnoreCase(search_city_or_state)).collect(Collectors.toList()));
+        }
+        return search_result;
 
     }
 
