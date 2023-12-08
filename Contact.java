@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -147,7 +148,7 @@ class Contact {
 
             Contact contact = new Contact(FirstName, LastName, Address, City, State, ZIP, PhoneNumber, Email);
             contacts.add(contact);
-
+            AddressBook.addCity_State(contact);
             System.out.println("Added to address book");
         }
         else{
@@ -199,6 +200,7 @@ class Contact {
                     contact_existing.setEmail(sc.nextLine());
 
                     System.out.println("Updated Contact Details");
+                    AddressBook.addCity_State(contact_existing);
                     System.out.println(contact_existing);
                     break;
                 } else {
@@ -282,14 +284,17 @@ class Contact {
 
         }
         System.out.println("Search contact by city or state");
-
-        List<List<Contact>> search_result = AddressBook.searchPersonInCityOrState(sc.nextLine());
-
-        for(List list : search_result){
-            for(Object c: list){
-                System.out.println(c.toString());
-            }
-        }
+        System.out.println("Enter city to view");
+        String city = sc.nextLine();
+        List<Contact> peopleInCity = AddressBook.getPersonsByCity(city);
+        System.out.println("People in"+city);
+        peopleInCity.forEach(person -> System.out.println(person.getfirstName() + " " + person.getlastName()));
+        System.out.println("Enter state to view");
+        String state = sc.nextLine();
+        List<Contact> peopleInState = AddressBook.getPersonsByState(state);
+        System.out.println("\nPeople in"+state);
+        peopleInState.forEach(person -> System.out.println(person.getfirstName() + " " + person.getlastName()));
+    }
 
 
 
@@ -299,14 +304,15 @@ class Contact {
     }
 
 
-}
+
 class AddressBook{
 
 
 
     public static  Set<Contact> contact_Information=new HashSet<>();
     public static Hashtable<String,Set<Contact>> Multiple_address_Book=new Hashtable<>();
-
+    public static Map<String, List<Contact>> cityDictionary = new HashMap<>();
+    public static Map<String, List<Contact>> stateDictionary = new HashMap<>();
     public static Set Serach_Address(String s){
         for(Map.Entry<String,Set<Contact>> map:Multiple_address_Book.entrySet()){
 
@@ -319,17 +325,20 @@ class AddressBook{
 
     }
 
-    public static List<List<Contact>> searchPersonInCityOrState(String search_city_or_state) {
-        List<List<Contact>> search_result = new LinkedList<>();
-        for(Map.Entry<String,Set<Contact>> map : Multiple_address_Book.entrySet()){
-            search_result.add(map.getValue().stream()
-                    .filter(person -> person.getCity().equalsIgnoreCase(search_city_or_state) || person.getState().equalsIgnoreCase(search_city_or_state)).collect(Collectors.toList()));
-        }
-        return search_result;
 
+
+    public static void addCity_State(Contact contact) {
+        cityDictionary.computeIfAbsent(contact.getCity(), k -> new ArrayList<>()).add(contact);
+        stateDictionary.computeIfAbsent(contact.getState(), k -> new ArrayList<>()).add(contact);
     }
 
+    public static List<Contact> getPersonsByCity(String city) {
+        return cityDictionary.getOrDefault(city, new ArrayList<>());
+    }
 
+    public static List<Contact> getPersonsByState(String state) {
+        return stateDictionary.getOrDefault(state, new ArrayList<>());
+    }
 
 
 
