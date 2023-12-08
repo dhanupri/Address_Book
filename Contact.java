@@ -289,11 +289,19 @@ class Contact {
         List<Contact> peopleInCity = AddressBook.getPersonsByCity(city);
         System.out.println("People in"+city);
         peopleInCity.forEach(person -> System.out.println(person.getfirstName() + " " + person.getlastName()));
+
         System.out.println("Enter state to view");
         String state = sc.nextLine();
         List<Contact> peopleInState = AddressBook.getPersonsByState(state);
         System.out.println("\nPeople in"+state);
         peopleInState.forEach(person -> System.out.println(person.getfirstName() + " " + person.getlastName()));
+
+
+        Map<String, Long> contactCountByCity = AddressBook.getContactCountByCity();
+        System.out.println("Contact count by city: " + contactCountByCity);
+
+        Map<String, Long> contactCountByState = AddressBook.getContactCountByState();
+        System.out.println("Contact count by state: " + contactCountByState);
     }
 
 
@@ -340,6 +348,15 @@ class AddressBook{
         return stateDictionary.getOrDefault(state, new ArrayList<>());
     }
 
+    public static Map<String, Long> getContactCountByCity() {
+        return cityDictionary.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> (long) e.getValue().size()));
+    }
+
+    public static Map<String, Long> getContactCountByState() {
+        return stateDictionary.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> (long) e.getValue().size()));
+    }
 
 
 
